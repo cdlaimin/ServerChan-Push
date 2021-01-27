@@ -1,14 +1,19 @@
-name: 'ServerChan Push News'
+name: 'Push News'
 
 on:
+  push:
+    branches:
+      - master
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */3 * * *' # 定义 cron 表达式
+  watch:
+    types: [started] # 定义star是自动发送
 
 env:
   TZ: Asia/Shanghai
 
 jobs:
-  ServerChan-Push-News:
+  Gitfolio-Spider:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,9 +28,11 @@ jobs:
         run: pip install -r ./requirements.txt
       - name: 'Working'
         env:
-          SECRET: ${{ secrets.SECRET }}
+          SECRET: ${{ secrets.SECRET }} # 设置的密钥
         timeout-minutes: 350
         run: |
           echo SECRET=$SECRET > .env
           python main.py
           rm -f .env
+
+
